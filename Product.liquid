@@ -1,0 +1,29 @@
+<div itemscope itemtype=" http://schema.org/Product ">
+  <meta itemprop="name" content="{{product.title}}" />
+  <meta itemprop="description" content="{{product.description | strip_html | truncatewords: 50}}" />
+  <meta itemprop="sku" content="{{ product.selected_or_first_available_variant.sku }}" />
+  <meta itemprop="url" content="{{ shop.secure_url }}{{ product.url }}">
+  <meta itemprop="image" content="{{ product.featured_image.src | img_url: 'grande' }}">
+  <meta itemprop="brand" content="{{ product.vendor }}" />
+  <meta itemprop="mpn" content="{{ product.selected_or_first_available_variant.sku }}" />
+  {% assign gtin_num = product.selected_or_first_available_variant.barcode | size %}
+  {% if gtin_num == 12 or gtin_num == 13 or gtin_num == 14 %}
+    <meta itemprop="gtin{{gtin_num}}" content="{{ product.selected_or_first_available_variant.barcode }}" />
+  {% endif %}
+
+  <div
+    itemprop="offers"
+    itemscope
+    itemtype=" http://schema.org/Offer ">
+    <meta itemprop="priceCurrency" content="{{ shop.currency }}" />
+    <meta itemprop="price" content="{{product.selected_or_first_available_variant.price|money_without_currency }}" />
+    <meta itemprop="priceValidUntil" content="{{ "today" | date: '%s' | plus: 3650000 | date: "%Y-%m-%d" }}">
+    <meta itemprop="availability" content=" http://schema.org/{%  if product.selected_or_first_available_variant.available %}InStock{% else %}OutOfStock{% endif %}" />
+    <meta
+      itemprop="itemCondition"
+      itemtype=" http://schema.org/OfferItemCondition "
+      content=" http://schema.org/NewCondition " />
+    <meta itemprop="seller" content="{{ shop.name | escape }}" />
+    <meta itemprop="url" content="{{ shop.secure_url }}{{ product.selected_or_first_available_variant.url }}">
+  </div>
+</div>
